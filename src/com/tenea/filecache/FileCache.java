@@ -90,6 +90,22 @@ public class FileCache {
 
 		return data;
 	}
+	
+	public boolean remove(String input) {
+		// Make the hash
+		String hash = makeHash(input);
+
+		// Get the file handle
+		File file = file(hash);
+
+		// Check if file exists
+		if (exists(file)) {
+			// Get the data
+			return file.delete();
+		} else {
+			return false;
+		}
+	}
 
 	@SuppressLint("DefaultLocale")
 	private String computeHash(byte[] byteArray) {
@@ -171,13 +187,13 @@ public class FileCache {
 
 	// Support methods
 
-	public static byte[] toByteArray(InputStream in) throws IOException {
+	private static byte[] toByteArray(InputStream in) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		copy(in, out);
 		return out.toByteArray();
 	}
 
-	public static long copy(InputStream from, OutputStream to) throws IOException {
+	private static long copy(InputStream from, OutputStream to) throws IOException {
 		byte[] buf = new byte[4096];
 		long total = 0;
 		while (true) {
